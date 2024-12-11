@@ -1,0 +1,682 @@
+1. Write a program to read array of numbers from user and sort the array using bubble 
+sorting technique. 
+def bubble_sort(arr): 
+n = len(arr) 
+for i in range(n): 
+swapped = False 
+for j in range(0, n-i-1): 
+if arr[j] > arr[j+1]: 
+arr[j], arr[j+1] = arr[j+1], arr[j] 
+swapped = True 
+if not swapped: 
+break 
+def main(): 
+nums = input("Enter a list of numbers separated by spaces: ") 
+arr = list(map(int, nums.split())) 
+bubble_sort(arr) 
+print("Sorted array:", arr) 
+if __name__ == "__main__": 
+main() 
+Output :- 
+Enter a list of numbers separated by spaces: 6 5 1 8 9 2 
+Sorted array: [1, 2, 5, 6, 8, 9]
+
+
+2. Write a Python program to create a class that represents a shape. 
+Include methods to calculate its area and perimeter. Implement subclasses for 
+different shapes like circle, triangle, and square. 
+import math 
+class Shape: 
+def area(self): 
+pass 
+def perimeter(self): 
+pass 
+class Circle(Shape): 
+def __init (self, radius): 
+self.radius = radius 
+def area(self): 
+return math.pi * (self.radius ** 2) 
+def perimeter(self): 
+return 2 * math.pi * self.radius 
+class Triangle(Shape): 
+def __init (self, a, b, c): 
+self.a = a 
+self.b = b 
+self.c = c 
+def area(self): 
+s = (self.a + self.b + self.c) / 2 
+return math.sqrt(s * (s - self.a) * (s - self.b) * (s - self.c)) def 
+perimeter(self): 
+return self.a + self.b + self.c 
+class Square(Shape): 
+def __init__(self, side): 
+self.side = side 
+def area(self):
+return self.side ** 2 
+def perimeter(self): 
+return 4 * self.side 
+def main(): 
+circle = Circle(5) 
+triangle = Triangle(3, 4, 5) 
+square = Square(4) 
+print("Circle: Area =", circle.area(), "Perimeter =", circle.perimeter()) 
+print("Triangle: Area =", triangle.area(), "Perimeter =", triangle.perimeter()) 
+print("Square: Area =", square.area(), "Perimeter =", square.perimeter()) 
+if __name__ == " main__": 
+main() 
+Output :- 
+Circle: Area = 78.53981633974483 Perimeter = 31.41592653589793 
+Triangle: Area = 6.0 Perimeter = 12 
+Square: Area = 16 Perimeter = 16
+
+
+
+
+3. Write a program in python to create a class student with name, mobile, marks and 
+1. create list of students 
+2. using operator overloading add marks of students and show total 
+class Student: 
+def __init (self, name, mobile, marks): 
+self.name = name 
+self.mobile = mobile 
+self.marks = marks 
+def __add__(self, other): 
+if isinstance(other, Student): 
+total_marks = self.marks + other.marks 
+return total_marks 
+return NotImplemented 
+def __str (self): 
+return f"Name: {self.name}, Mobile: {self.mobile}, Marks: {self.marks}" 
+def main(): 
+students = [ 
+Student("Alice", "1234567890", 85), 
+Student("Bob", "0987654321", 90), 
+Student("Charlie", "1122334455", 78) 
+] 
+print("Student List:") 
+for student in students: 
+print(student) 
+student1 = students[0] 
+student2 = students[1] 
+total_marks = student1 + student2 
+print("\nTotal marks of Alice and Bob:", total_marks) if 
+__name__ == " main__": 
+main()
+Output :- 
+Student List: 
+Name: Alice, Mobile: 1234567890, Marks: 85 
+Name: Bob, Mobile: 0987654321, Marks: 90 
+Name: Charlie, Mobile: 1122334455, Marks: 78 
+Total marks of Alice and Bob: 175
+
+
+
+4. Using Pymongo, write a program to create student registration menu with below 
+options 
+1. Register student with fields like (name, number, marks) 
+2. Display all the students in database 
+3. Find student by ID 
+4. Update student marks 
+5. Delete student 
+import pymongo 
+from pymongo import MongoClient 
+from bson.objectid import ObjectId 
+client = MongoClient("mongodb://localhost:27017/") 
+db = client["student_registration_db"] 
+students_collection = db["students"] 
+def register_student(): 
+name = input("Enter student name: ") 
+mobile = input("Enter mobile number: ") 
+marks = float(input("Enter marks: ")) 
+student = { 
+"name": name, 
+"mobile": mobile, 
+"marks": marks 
+} 
+result = students_collection.insert_one(student) 
+print(f"Student registered successfully with ID: {result.inserted_id}") 
+def display_students(): 
+students = students_collection.find() 
+print("\nList of all registered students:")
+for student in students: 
+print(f"ID: {student['_id']}, Name: {student['name']}, Mobile: {student['mobile']}, 
+Marks: {student['marks']}") 
+def find_student_by_id(): 
+student_id = input("Enter student ID to search: ") 
+student = students_collection.find_one({"_id": ObjectId(student_id)}) 
+if student: 
+print("\nStudent found:") 
+print(f"ID: {student['_id']}, Name: {student['name']}, Mobile: {student['mobile']}, 
+Marks: {student['marks']}") 
+else: 
+print("Student not found!") 
+def update_student_marks(): 
+student_id = input("Enter student ID to update marks: ") 
+new_marks = float(input("Enter new marks: ")) 
+result = students_collection.update_one( 
+{"_id": ObjectId(student_id)}, 
+{"$set": {"marks": new_marks}} 
+) 
+if result.matched_count > 0: 
+print(f"Marks updated successfully for student with ID: {student_id}") 
+else: 
+print("Student not found!") 
+def delete_student(): 
+student_id = input("Enter student ID to delete: ") 
+result = students_collection.delete_one({"_id": ObjectId(student_id)})
+if result.deleted_count > 0: 
+print(f"Student with ID {student_id} deleted successfully.") else: 
+print("Student not found!") 
+def main(): 
+while True: 
+print("\n--- Student Registration System ---") 
+print("1. Register a new student") 
+print("2. Display all students") 
+print("3. Find student by ID") 
+print("4. Update student marks") 
+print("5. Delete student") 
+print("6. Exit") 
+choice = input("Enter your choice (1-6): ") 
+if choice == "1": 
+register_student() 
+elif choice == "2": 
+display_students() 
+elif choice == "3": 
+find_student_by_id() 
+elif choice == "4": 
+update_student_marks() 
+elif choice == "5": 
+delete_student() 
+elif choice == "6": 
+print("Exiting the system...") 
+break
+else: 
+print("Invalid choice! Please try again.") 
+if __name__ == "__main__": 
+main() 
+Output 
+Student Registration System - 
+1. Register a new student 
+2. Display all students 
+3. Find student by ID 
+4. Update student marks 
+5. Delete student 
+6. Exit 
+Enter your choice (1-6): 2 
+List of all registered students: 
+ID: 675022b32908cf8cc7319425, Name: Atharv, Mobile: 9898989898, Marks: 99.0 
+Student Registration System - 
+1. Register a new student 
+2. Display all students 
+3. Find student by ID 
+4. Update student marks 
+5. Delete student 
+6. Exit 
+Enter your choice (1-6): 4 
+Enter student ID to update marks: 675022b32908cf8cc7319425 
+Enter new marks: 100 
+Marks updated successfully for student with ID: 675022b32908cf8cc7319425
+Student Registration System - 
+1. Register a new student 
+2. Display all students 
+3. Find student by ID 
+4. Update student marks 
+5. Delete student 
+6. Exit 
+Enter your choice (1-6): 2 
+List of all registered students: 
+ID: 675022b32908cf8cc7319425, Name: Atharv, Mobile: 9898989898, Marks: 100.0
+
+
+
+5.       Write python code for email and mobile number validation, take input 
+from user and validate 
+import re 
+def validate_email(email): 
+email_pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$' 
+if re.match(email_pattern, email): 
+return True 
+else: 
+return False 
+def validate_mobile(mobile): 
+# Regex pattern for mobile number validation 
+mobile_pattern = r'^\+?\d{1,4}?[-\s]?\(?\d{1,3}?\)?[-\s]?\d{3}[-\s]?\d{4}$' 
+if re.match(mobile_pattern, mobile): 
+return True 
+else: 
+return False 
+if __name__ == "__main__": 
+# Taking input for email 
+email = input("Enter your email address: ") 
+if validate_email(email): 
+print("Email is valid.") 
+else: 
+print("Invalid email address.")
+mobile = input("Enter your mobile number: ") 
+if validate_mobile(mobile): 
+print("Mobile number is valid.") 
+else: 
+print("Invalid mobile number.") 
+Output :- 
+Enter your email address: Atharv@mit.edu 
+Email is valid. 
+Enter your mobile number: 9878654578 
+Mobile number is valid 
+
+
+
+
+6. Create a simple bank account class that manages the balance. The program 
+should handle the following exceptions:  
+1. ValueError: If a non-numeric value is entered for deposit or withdrawal  
+amount.  
+2. InsufficientFundsError: If the withdrawal amount exceeds the current  
+balance. 
+class InsufficientFundsError(Exception): 
+pass 
+class BankAccount: 
+def __init (self, initial_balance=0): 
+self.balance = initial_balance 
+def deposit(self, amount): 
+try: 
+if amount <= 0: 
+raise ValueError("Deposit amount must be positive!") 
+self.balance += amount 
+print(f"Successfully deposited {amount}. Current balance: {self.balance}") 
+except ValueError as ve: 
+print(f"Error: {ve}") 
+def withdraw(self, amount): 
+try: 
+if amount <= 0: 
+raise ValueError("Withdrawal amount must be positive!") 
+if amount > self.balance: 
+raise InsufficientFundsError("Insufficient funds for this withdrawal!") 
+self.balance -= amount 
+print(f"Successfully withdrew {amount}. Current balance: {self.balance}") 
+except ValueError as ve: 
+print(f"Error: {ve}") 
+except InsufficientFundsError as ife:
+print(f"Error: {ife}") 
+def get_balance(self): 
+return self.balance 
+account = BankAccount(1000) 
+account.deposit(500) 
+account.withdraw(200) 
+account.withdraw(1500) 
+account.deposit(-100) 
+Output :- 
+Successfully deposited 500. Current balance: 1500 
+Successfully withdrew 200. Current balance: 1300 
+Error: Insufficient funds for this withdrawal! 
+Error: Deposit amount must be positive!
+
+
+
+7.Write a program to perform below tasks in python 
+1. Finding the Square Root of a Number 
+2. Calculating the Factorial of a Number 
+3. Performing Trigonometric Calculations (Sine, Cosine, Tangent) 
+import math 
+def find_square_root(number): 
+if number < 0: 
+return "Error: Cannot compute the square root of a negative number." 
+return math.sqrt(number) 
+if number < 0: 
+return "Error: Factorial is not defined for negative numbers." 
+return math.factorial(number) 
+def trigonometric_calculations(angle_degrees): 
+angle_radians = math.radians(angle_degrees) 
+sine = math.sin(angle_radians) 
+cosine = math.cos(angle_radians) 
+tangent = math.tan(angle_radians) 
+return sine, cosine, tangent 
+def main(): 
+number = float(input("Enter a number to find its square root: ")) 
+result = find_square_root(number) 
+print(f"Square root: {result:.2f}") 
+number = int(input("\nEnter a number to find its factorial: "))
+result = calculate_factorial(number) 
+print(f"Factorial: {result}") 
+angle_degrees = float(input("\nEnter an angle in degrees to calculate its sine, cosine, and 
+tangent: ")) 
+sine, cosine, tangent = trigonometric_calculations(angle_degrees) 
+print(f"Sine: {sine:.2f}, Cosine: {cosine:.2f}, Tangent: {tangent:.2f}") 
+if __name__ == "__main__": 
+main() 
+Output :- 
+Enter a number to find its square root: 64 
+Square root: 8.00 
+Enter a number to find its factorial: 6 
+Factorial: 720 
+Enter an angle in degrees to calculate its sine, cosine, and tangent: 66 Sine: 
+0.91, Cosine: 0.41, Tangent: 2.25
+
+
+
+
+8. Write a program in python based on threading to download multiple files, 
+join threads to main thread once download is completed and show the progress. 
+import threading 
+import time 
+import random 
+def download_file(file_name, duration): 
+print(f"Starting download for {file_name}... (estimated time: {duration}s)") 
+time.sleep(duration) # Simulating time taken to download a file 
+print(f"Download complete for {file_name}.") 
+file_names = ['file1.txt', 'file2.jpg', 'file3.pdf', 'file4.zip', 'file5.mp3'] 
+threads = [] 
+for file in file_names: 
+download_duration = random.randint(1, 5) 
+thread = threading.Thread(target=download_file, args=(file, download_duration)) 
+thread.start() 
+threads.append(thread) 
+for thread in threads: 
+thread.join() 
+print("All downloads are complete!")
+if __name__ == "__main__": 
+main() 
+Output :- 
+Starting download for file1.txt... (estimated time: 4s) 
+Starting download for file2.jpg... (estimated time: 3s) 
+Starting download for file3.pdf... (estimated time: 5s) 
+Starting download for file4.zip... (estimated time: 2s) 
+Starting download for file5.mp3... (estimated time: 4s) 
+Download complete for file4.zip. 
+Download complete for file2.jpg. 
+Download complete for file1.txt. 
+Download complete for file5.mp3. 
+Download complete for file3.pdf. 
+All downloads are complete!
+
+
+
+
+9. Write a Python program for implementation of stack. 
+from sys import maxsize 
+def createStack(): 
+stack = [] 
+return stack 
+def isEmpty(stack): 
+return len(stack) == 0 
+def push(stack, item): 
+stack.append(item) 
+print(item + " pushed to stack ") 
+def pop(stack): 
+if (isEmpty(stack)): 
+return str(-maxsize -1) 
+return stack.pop() 
+def peek(stack): 
+if (isEmpty(stack)): 
+return str(-maxsize -1) 
+return stack[len(stack) - 1] 
+stack = createStack() 
+push(stack, str(10)) 
+push(stack, str(20)) 
+push(stack, str(30)) 
+print(pop(stack) + " popped from stack") 
+Output: 
+10 pushed into stack 
+20 pushed into stack 
+30 pushed into stack 
+30 Popped from stack 
+Top element is : 20 
+Elements present in stack : 20 10
+
+
+
+10. Write a Python program for linked list implementation of stack 
+class StackNode: 
+def __init (self, data): 
+self.data = data 
+self.next = None 
+class Stack: 
+def __init__(self): 
+self.root = None 
+def isEmpty(self): 
+return True if self.root is None else False 
+def push(self, data): 
+newNode = StackNode(data) 
+newNode.next = self.root 
+self.root = newNode 
+print ("% d pushed to stack" % (data)) 
+def pop(self): 
+if (self.isEmpty()): 
+return float("-inf") 
+temp = self.root 
+self.root = self.root.next 
+popped = temp.data 
+return popped 
+def peek(self): 
+if self.isEmpty(): 
+return float("-inf") 
+return self.root.data 
+stack = Stack() 
+stack.push(10) 
+stack.push(20) 
+stack.push(30) 
+print ("% d popped from stack" % (stack.pop()))
+print ("Top element is % d " % (stack.peek())) 
+Output 
+10 pushed to stack 
+20 pushed to stack 
+30 pushed to stack 
+30 popped from stack 
+Top element is 20 
+Elements present in stack : 20 10
+ 
+
+
+
+11. Python program for Bubble Sort Algorithm Implementation  
+def bubbleSort(arr): 
+n = len(arr) 
+for i in range(n): 
+for j in range(0, n - i - 1): 
+if arr[j] > arr[j + 1]: 
+arr[j], arr[j + 1] = arr[j + 1], arr[j] 
+arr = [ 2, 1, 10, 23 ] 
+bubbleSort(arr) 
+print("Sorted array is:") 
+for i in range(len(arr)): 
+print("%d" % arr[i]) 
+ 
+ 
+ 
+ 
+Output: 
+Sorted array is: 
+1 
+2 
+10 
+23
+
+
+
+
+12. Write a python program to implement of Selection Sort algorithm. 
+def selectionSort(array, size): 
+for s in range(size): 
+min_idx = s 
+for i in range(s + 1, size): 
+if array[i] < array[min_idx]: 
+min_idx = i 
+(array[s], array[min_idx]) = (array[min_idx], array[s]) 
+data = [ 7, 2, 1, 6 ] 
+size = len(data) 
+selectionSort(data, size) 
+print('Sorted Array in Ascending Order is :') 
+print(data) 
+Output: 
+Sorted Array in Ascending Order is : 
+[1, 2, 6, 7]
+
+
+
+13. Write a python program to Creating a function for insertion sort algorithm 
+def insertion_sort(list1): 
+for i in range(1, len(list1)): 
+a = list1[i] 
+j = i - 1 
+while j >= 0 and a < list1[j]: 
+list1[j + 1] = list1[j] 
+j -= 1 
+list1[j + 1] = a 
+return list1 
+list1 = [ 7, 2, 1, 6 ] 
+print("The unsorted list is:", list1) 
+print("The sorted new list is:", insertion_sort(list1)) 
+Output 
+The unsorted list is: [7, 2, 1, 6] 
+The sorted new list is: [1, 2, 6, 7]
+
+
+
+14. Write a python program for Implementation of Linear Search in Python 
+def linear_search(arr, target): 
+for i in range(len(arr)): 
+if arr[i] == target: 
+return i 
+return -1 
+arr = [2, 3, 4, 10, 40] 
+target = 10 
+result = linear_search(arr, target) 
+if result != -1: 
+print(f"Linear Search: Element found at index {result}") 
+else: 
+print("Linear Search: Element not found") 
+Output 
+Linear Search: Element found at index 3
+
+
+
+15. Write a python program for Implementation of Binary Search in Python (Recursive) 
+def binary_search(arr, target, low, high): 
+if low <= high: 
+mid = (low + high) // 2 
+if arr[mid] == target: 
+return mid 
+elif arr[mid] < target: 
+return binary_search(arr, target, mid + 1, high) 
+else: 
+return binary_search(arr, target, low, mid - 1) 
+else: 
+return -1 
+arr = [2, 3, 4, 10, 40] 
+target = 10 
+result = binary_search(sorted(arr), target, 0, len(arr) - 1) 
+if result != -1: 
+print(f"Binary Search: Element found at index {result}") 
+else: 
+print("Binary Search: Element not found") 
+Output 
+Binary Search: Element found at index 3
+
+
+
+
+16. Write a Python program to linearly search x in arr[]. 
+def search(arr, N, x): 
+for i in range(0, N): 
+if (arr[i] == x): 
+return i 
+return -1 
+if    name == " main ": 
+arr = [2, 3, 4, 10, 40] 
+x = 10 
+N = len(arr) 
+result = search(arr, N, x) 
+if(result == -1): 
+print("Element is not present in array") 
+else: 
+print("Element is present at index", result) 
+Output 
+Present at Index 3
+
+
+
+
+
+17. Write a python program for implementation of Inorder Tree Traversal 
+class Node: 
+def  init (self, v): 
+self.left = None 
+self.right = None 
+self.data = v 
+def printInorder(root): 
+if root: 
+printInorder(root.left) 
+print(root.data,end=&quot; &quot;) 
+printInorder(root.right) 
+if    name == &quot;__main &quot;: 
+root = Node(10) 
+root.left = Node(25) 
+root.right = Node(30) 
+root.left.left = Node(20) 
+root.left.right = Node(35) 
+root.right.left = Node(15) 
+root.right.right = Node(45) 
+print(&quot;Inorder Traversal:&quot;,end=&quot; &quot;) 
+printInorder(root) 
+Output 
+Inorder Traversal: 20 25 35 10 15 30 45
+
+
+
+
+18. Write a python program for Breadth First Search 
+from collections import deque 
+def bfs(adj, s): 
+q = deque() 
+visited = [False] * len(adj); 
+visited[s] = True 
+q.append(s) 
+while q: 
+curr = q.popleft() 
+print(curr, end=" ") 
+for x in adj[curr]: 
+if not visited[x]: 
+visited[x] = True 
+q.append(x) 
+def add_edge(adj, u, v): 
+adj[u].append(v) 
+adj[v].append(u) 
+if    name == " main    ": 
+V = 5 
+adj = [[] for _ in range(V)] 
+add_edge(adj, 0, 1) 
+add_edge(adj, 0, 2) 
+add_edge(adj, 1, 3) 
+add_edge(adj, 1, 4) 
+add_edge(adj, 2, 4) 
+print("BFS starting from 0: ") 
+bfs(adj, 0) 
+Output 
+0 1 2 3 4 5
+
+
+
+19. Write a python program to implement Depth First Search algorithm 
+def dfs_rec(adj, visited, s): 
+visited[s] = True 
+print(s, end=" ") 
+for i in adj[s]: 
+if not visited[i]: 
+dfs_rec(adj, visited, i) 
+def dfs(adj, s): 
+visited = [False] * len(adj) 
+dfs_rec(adj, visited, s) 
+def add_edge(adj, s, t): 
+adj[s].append(t) 
+adj[t].append(s) 
+if    name == "   main    ": 
+V = 5 
+adj = [[] for _ in range(V)] 
+edges = [[1, 2], [1, 0], [2, 0], [2, 3], [2, 4]] 
+for e in edges: 
+add_edge(adj, e[0], e[1]) 
+source = 1 
+print("DFS from source:", source) 
+dfs(adj, source) 
+Output 
+DFS from source: 1 
+1 2 0 3 4 
